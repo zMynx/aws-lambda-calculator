@@ -165,7 +165,10 @@ jobs:
         id: build
         env:
           TAGGED_IMAGE: ${{ needs.check-pr-status.outputs.tagged_image }}
-        run: podman build --file Containerfile . --tag $TAGGED_IMAGE
+        run: |
+          set -exu
+          podman build --file Containerfile . --tag $TAGGED_IMAGE
+          # podman save $TAGGED_IMAGE -o image-to-scan.tar
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
